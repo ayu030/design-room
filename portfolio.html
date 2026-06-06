@@ -530,7 +530,8 @@ const PLANS = [
 
 async function fetchUsedHoursForMonth(year, month) {
   const start = new Date(year, month, 1);
-  const end = new Date(year, month + 1, 0, 23, 59, 59);
+  const end = new Date(year, month + 1, 1);
+  const toJST = d => new Date(d.getTime() + 9*60*60*1000);
   const PROXY = 'https://corsproxy.io/?';
   const ICAL_URL = encodeURIComponent('https://calendar.google.com/calendar/ical/ayuka030%40gmail.com/public/basic.ics');
   const res = await fetch(PROXY + ICAL_URL);
@@ -544,24 +545,19 @@ async function fetchUsedHoursForMonth(year, month) {
     const parseDate = s => {
       s = s.trim();
       if (s.length === 8) return new Date(s.slice(0,4), s.slice(4,6)-1, s.slice(6,8));
-      return new Date(s.replace(/(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z?/, '$1-$2-$3T$4:$5:$6'));
+      const isUTC = s.endsWith('Z');
+      const d = new Date(s.replace(/(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z?/, '$1-$2-$3T$4:$5:$6') + (isUTC ? 'Z' : ''));
+      return d;
     };
-    const evStart = parseDate(dtStartMatch[1]);
-    const evEnd = parseDate(dtEndMatch[1]);
-    if (evStart >= start && evStart <= end) {
+    const evStart = toJST(parseDate(dtStartMatch[1]));
+    const evEnd = toJST(parseDate(dtEndMatch[1]));
+    if (evStart >= start && evStart < end) {
       total += (evEnd - evStart) / 3600000;
     }
   });
   return Math.round(total);
 }
-async function debugCalendar() {
-  const PROXY = 'https://corsproxy.io/?';
-  const ICAL_URL = encodeURIComponent('https://calendar.google.com/calendar/ical/ayuka030%40gmail.com/public/basic.ics');
-  const res = await fetch(PROXY + ICAL_URL);
-  const text = await res.text();
-  console.log('iCal取得:', text.slice(0, 500));
-}
-debugCalendar();
+
 async function renderAvailability() {
   const grid = document.getElementById('availability-grid');
   const note = document.getElementById('availability-note');
