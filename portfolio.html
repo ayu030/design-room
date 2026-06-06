@@ -534,7 +534,7 @@ async function fetchUsedHours() {
   const start = new Date(y, m, 1);
   const end = new Date(y, m + 1, 0, 23, 59, 59);
 
-  const PROXY = 'https://api.allorigins.win/raw?url=';
+  const PROXY = 'https://corsproxy.io/?';
   const ICAL_URL = encodeURIComponent('https://calendar.google.com/calendar/ical/ayuka030%40gmail.com/public/basic.ics');
   const res = await fetch(PROXY + ICAL_URL);
   const text = await res.text();
