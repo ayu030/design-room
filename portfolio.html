@@ -527,18 +527,14 @@ const PLANS = [
   { name: '10万円プラン', price: '¥100,000', hours: 35 },
 ];
 
-async function fetchUsedHours() {
-  const now = new Date();
-  const y = now.getFullYear();
-  const m = now.getMonth();
-  const start = new Date(y, m, 1);
-  const end = new Date(y, m + 1, 0, 23, 59, 59);
 
+async function fetchUsedHoursForMonth(year, month) {
+  const start = new Date(year, month, 1);
+  const end = new Date(year, month + 1, 0, 23, 59, 59);
   const PROXY = 'https://corsproxy.io/?';
   const ICAL_URL = encodeURIComponent('https://calendar.google.com/calendar/ical/ayuka030%40gmail.com/public/basic.ics');
   const res = await fetch(PROXY + ICAL_URL);
   const text = await res.text();
-
   const events = text.split('BEGIN:VEVENT').slice(1);
   let total = 0;
   events.forEach(ev => {
@@ -563,23 +559,40 @@ async function renderAvailability() {
   const grid = document.getElementById('availability-grid');
   const note = document.getElementById('availability-note');
   try {
-    const used = await fetchUsedHours();
-    const remaining = TOTAL_HOURS - used;
     const now = new Date();
-    const monthName = `${now.getMonth() + 1}月`;
+    const months = [0,1,2,3].map(i => {
+      const d = new Date(now.getFullYear(), now.getMonth() + i, 1);
+      return { year: d.getFullYear(), month: d.getMonth(), label: `${d.getMonth()+1}月` };
+    });
 
-    grid.innerHTML = PLANS.map(p => {
-      const slots = Math.floor(remaining / p.hours);
-      const color = slots === 0 ? 'var(--text-light)' : slots === 1 ? '#9C8EAA' : 'var(--lavender-deep)';
-      const label = slots === 0 ? '満枠' : `あと ${slots} 枠`;
-      return `
-        <div style="background:var(--white);border:1px solid var(--mist);border-radius:4px;padding:1.5rem;text-align:center;">
-          <p style="font-family:sans-serif;font-size:0.75rem;color:var(--mauve);letter-spacing:0.1em;margin-bottom:0.5rem;">${p.price}/月</p>
-          <p style="font-family:sans-serif;font-size:0.85rem;color:var(--text-dark);margin-bottom:0.75rem;">${p.name}</p>
-          <p style="font-family:sans-serif;font-size:1.4rem;font-weight:600;color:${color};">${label}</p>
-        </div>`;
+    const hoursPerMonth = await Promise.all(months.map(m => fetchUsedHoursForMonth(m.year, m.month)));
+
+    const FIXED = 40;
+    const rows = PLANS.map(p => {
+      const cells = months.map((m, i) => {
+        const remaining = TOTAL_HOURS - hoursPerMonth[i] - FIXED;
+        const slots = Math.floor(remaining / p.hours);
+        const symbol = slots === 0 ? '✕' : slots === 1 ? '△' : '○';
+        const color = slots === 0 ? 'var(--text-light)' : slots === 1 ? '#9C8EAA' : 'var(--lavender-deep)';
+        return `<td style="text-align:center;padding:0.75rem 0.5rem;font-size:1.2rem;color:${color};">${symbol}</td>`;
+      }).join('');
+      return `<tr>
+        <td style="font-family:sans-serif;font-size:0.8rem;color:var(--text-dark);padding:0.75rem 1rem 0.75rem 0;white-space:nowrap;">${p.price}<span style="font-size:0.7rem;color:var(--text-light);">/月</span></td>
+        ${cells}
+      </tr>`;
     }).join('');
-    note.textContent = `${monthName}現在 · 稼働済み ${used}時間 / 残り ${remaining}時間`;
+
+    const headers = months.map(m => `<th style="font-family:sans-serif;font-size:0.75rem;color:var(--text-light);font-weight:400;padding:0 0.5rem 0.75rem;text-align:center;">${m.label}</th>`).join('');
+
+    grid.innerHTML = `
+      <div style="background:var(--white);border:1px solid var(--mist);border-radius:4px;padding:1.5rem;">
+        <table style="width:100%;border-collapse:collapse;">
+          <thead><tr><th></th>${headers}</tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+        <p style="font-family:sans-serif;font-size:0.72rem;color:var(--text-light);margin-top:1rem;">○ 空きあり　△ 残りわずか　✕ 満枠</p>
+      </div>`;
+    note.textContent = '';
   } catch(e) {
     grid.innerHTML = `<div style="font-family:sans-serif;font-size:0.85rem;color:var(--text-light);padding:1rem;">空き状況を取得できませんでした。</div>`;
   }
