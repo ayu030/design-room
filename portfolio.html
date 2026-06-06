@@ -554,7 +554,14 @@ async function fetchUsedHoursForMonth(year, month) {
   });
   return Math.round(total);
 }
-
+async function debugCalendar() {
+  const PROXY = 'https://corsproxy.io/?';
+  const ICAL_URL = encodeURIComponent('https://calendar.google.com/calendar/ical/ayuka030%40gmail.com/public/basic.ics');
+  const res = await fetch(PROXY + ICAL_URL);
+  const text = await res.text();
+  console.log('iCal取得:', text.slice(0, 500));
+}
+debugCalendar();
 async function renderAvailability() {
   const grid = document.getElementById('availability-grid');
   const note = document.getElementById('availability-note');
