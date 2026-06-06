@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your business, unlimited.</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --cream: #FAF8F4;
+    --mist: #EDE8E0;
+    --lavender: #D9D4E7;
+    --lavender-mid: #B8AED4;
+    --lavender-deep: #7C6FA0;
+    --mauve: #9C8EAA;
+    --text-dark: #2C2A30;
+    --text-mid: #6B6278;
+    --text-light: #9E97A8;
+    --white: #FFFFFF;
+  }
+  body {
+    font-family: 'Georgia', serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    line-height: 1.7;
+  }
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(250,248,244,0.9);
+    backdrop-filter: blur(8px);
+    padding: 1rem 2.5rem;
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid var(--mist);
+  }
+  .nav-logo { font-size: 13px; letter-spacing: 0.15em; color: var(--mauve); font-family: sans-serif; }
+  .nav-links { display: flex; gap: 2rem; }
+  .nav-links a { font-size: 12px; letter-spacing: 0.1em; color: var(--text-mid); text-decoration: none; font-family: sans-serif; }
+
+  section { padding: 6rem 2.5rem; max-width: 960px; margin: 0 auto; }
+
+  /* Hero */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding-top: 8rem;
+    max-width: 100%;
+    position: relative;
+  }
+  .hero-inner { max-width: 960px; margin: 0 auto; padding: 0 2.5rem; }
+  .hero-en {
+    font-family: 'Georgia', serif;
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: normal;
+    letter-spacing: -0.01em;
+    color: var(--text-dark);
+    line-height: 1.15;
+  }
+  .hero-ja {
+    font-family: sans-serif;
+    font-size: clamp(0.95rem, 2vw, 1.15rem);
+    color: var(--text-mid);
+    margin-top: 1rem;
+    letter-spacing: 0.05em;
+  }
+  .hero-sub {
+    font-family: sans-serif;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin-top: 2.5rem;
+    max-width: 420px;
+    line-height: 1.8;
+  }
+  .hero-cta {
+    margin-top: 2.5rem;
+    display: inline-block;
+    padding: 0.8rem 2rem;
+    border: 1px solid var(--lavender-deep);
+    color: var(--lavender-deep);
+    font-family: sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    border-radius: 2px;
+  }
+  .hero-deco {
+    position: absolute; right: 5%; top: 30%;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 40% 40%, var(--lavender) 0%, var(--mist) 60%, transparent 80%);
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  /* Section titles */
+  .section-label {
+    font-family: sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--mauve);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+  }
+  .section-title {
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: normal;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+  }
+  .section-desc {
+    font-family: sans-serif;
+    font-size: 0.9rem;
+    color: var(--text-mid);
+    max-width: 520px;
+    line-height: 1.9;
+    margin-bottom: 3rem;
+  }
+
+  /* Why */
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+  }
+  .why-card {
+    background: var(--white);
+    border: 1px solid var(--mist);
+    border-radius: 4px;
+    padding: 1.75rem 1.5rem;
+  }
+  .why-icon {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--lavender-deep);
+  }
+  .why-card h3 {
+    font-family: sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+  }
+  .why-card p {
+    font-family: sans-serif;
+    font-size: 0.83rem;
+    color: var(--text-mid);
+    line-height: 1.8;
+  }
+
+  /* Services */
+  .services-bg { background: var(--mist); margin: 0; max-width: 100%; padding: 6rem 0; }
+  .services-inner { max-width: 960px; margin: 0 auto; padding: 0 2.5rem; }
+  .plans-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  .plan-card {
+    background: var(--white);
+    border: 1px solid var(--lavender);
+    border-radius: 4px;
+    padding: 2rem 1.5rem;
+    position: relative;
+  }
+  .plan-card.featured {
+    border-color: var(--lavender-deep);
+  }
+  .plan-badge {
+    position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+    background: var(--lavender-deep);
+    color: white;
+    font-family: sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    padding: 3px 12px;
+    border-radius: 2px;
+  }
+  .plan-price {
+    font-size: 2rem;
+    font-weight: normal;
+    color: var(--text-dark);
+    line-height: 1;
+  }
+  .plan-price span {
+    font-family: sans-serif;
+    font-size: 0.8rem;
+    color: var(--text-light);
+  }
+  .plan-name {
+    font-family: sans-serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    color: var(--mauve);
+    margin: 0.75rem 0 1.25rem;
+    text-transform: uppercase;
+  }
+  .plan-items {
+    list-style: none;
+    font-family: sans-serif;
+    font-size: 0.82rem;
+    color: var(--text-mid);
+    line-height: 2;
+  }
+  .plan-items li::before { content: "— "; color: var(--lavender-mid); }
+  .plan-note {
+    font-family: sans-serif;
+    font-size: 0.8rem;
+    color: var(--text-light);
+    margin-top: 2rem;
+    line-height: 1.8;
+    text-align: center;
+  }
+
+  /* What I do */
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+  }
+  .menu-item {
+    background: var(--white);
+    border: 1px solid var(--mist);
+    border-radius: 4px;
+    padding: 1.25rem 1rem;
+    text-align: center;
+  }
+  .menu-item .mi-icon { font-size: 1.4rem; color: var(--lavender-deep); margin-bottom: 0.5rem; }
+  .menu-item p {
+    font-family: sans-serif;
+    font-size: 0.82rem;
+    color: var(--text-mid);
+  }
+
+  /* Works */
+  .works-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+  }
+  .work-card {
+    border: 1px solid var(--mist);
+    border-radius: 4px;
+    overflow: hidden;
+    background: var(--white);
+  }
+  .work-thumb {
+    height: 160px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem;
+  }
+  .work-thumb.t1 { background: linear-gradient(135deg, var(--lavender) 0%, var(--mist) 100%); }
+  .work-thumb.t2 { background: linear-gradient(135deg, #E8E0F0 0%, #D4CDE8 100%); }
+  .work-thumb.t3 { background: linear-gradient(135deg, var(--mist) 0%, #E8E4DC 100%); }
+  .work-info { padding: 1.25rem 1.25rem 1.5rem; }
+  .work-tag {
+    font-family: sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    color: var(--mauve);
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .work-info h3 {
+    font-size: 1rem;
+    font-weight: normal;
+    color: var(--text-dark);
+    margin-bottom: 0.4rem;
+  }
+  .work-info p {
+    font-family: sans-serif;
+    font-size: 0.8rem;
+    color: var(--text-mid);
+    line-height: 1.7;
+  }
+
+  /* About */
+  .about-bg { background: var(--lavender); margin: 0; max-width: 100%; padding: 6rem 0; }
+  .about-inner { max-width: 960px; margin: 0 auto; padding: 0 2.5rem; display: grid; grid-template-columns: 1fr 1.4fr; gap: 4rem; align-items: center; }
+  .about-avatar {
+    width: 100%; aspect-ratio: 1;
+    max-width: 260px;
+    border-radius: 50%;
+    background: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 4rem;
+    opacity: 0.85;
+  }
+  .about-text .section-label { color: var(--lavender-deep); }
+  .about-text h2 { font-size: 1.8rem; font-weight: normal; margin-bottom: 1rem; }
+  .about-text p { font-family: sans-serif; font-size: 0.88rem; color: var(--text-mid); line-height: 1.9; margin-bottom: 1rem; }
+  .about-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.5rem; }
+  .tag {
+    font-family: sans-serif;
+    font-size: 0.75rem;
+    padding: 4px 12px;
+    border: 1px solid var(--lavender-deep);
+    color: var(--lavender-deep);
+    border-radius: 2px;
+  }
+
+  /* Contact */
+  .contact-inner { text-align: center; }
+  .contact-inner .section-title { font-size: 2rem; }
+  .contact-inner .section-desc { margin: 1rem auto 2.5rem; }
+  .contact-btn {
+    display: inline-block;
+    padding: 1rem 3rem;
+    background: var(--lavender-deep);
+    color: white;
+    font-family: sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    border-radius: 2px;
+  }
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-family: sans-serif;
+    font-size: 0.75rem;
+    color: var(--text-light);
+    border-top: 1px solid var(--mist);
+  }
+
+  @media (max-width: 640px) {
+    .plans-grid { grid-template-columns: 1fr; }
+    .about-inner { grid-template-columns: 1fr; }
+    .hero-deco { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">AYU</div>
+  <div class="nav-links">
+    <a href="#services">Services</a>
+    <a href="#works">Works</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<div class="hero">
+  <div class="hero-deco"></div>
+  <div class="hero-inner">
+    <p class="hero-en">Your business,<br>unlimited.</p>
+    <p class="hero-ja">あなたのビジネスが、無限大になる。</p>
+    <p class="hero-sub">デザイナーが隣にいると、できることが変わる。<br>SNS、広告、Web、印刷物——あらゆる表現で、あなたのビジネスを前へ。</p>
+    <a href="#services" class="hero-cta">プランを見る</a>
+  </div>
+</div>
+
+<!-- Why -->
+<section id="why">
+  <p class="section-label">Why designer</p>
+  <h2 class="section-title">デザイナーを抱えるということ</h2>
+  <p class="section-desc">外注と違うのは、あなたのビジネスを「知っている」こと。依頼のたびに説明しなくていい。動くたびに、ブランドが育っていく。</p>
+  <div class="why-grid">
+    <div class="why-card">
+      <div class="why-icon">✦</div>
+      <h3>スピードが変わる</h3>
+      <p>急な投稿も、突発的なキャンペーンも、すぐ動ける。待ち時間ゼロで、機会を逃さない。</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">◈</div>
+      <h3>一貫性が生まれる</h3>
+      <p>SNSもWebもチラシも、すべてが同じトーンで揃う。バラバラな印象がなくなり、ブランドへの信頼が育つ。</p>
+    </div>
+    <div class="why-card">
+      <div class="why-icon">◎</div>
+      <h3>可能性が広がる</h3>
+      <p>「これできる？」に答えられる人が傍にいる。やりたいことが、やれることに変わっていく。</p>
+    </div>
+  </div>
+</section>
+
+<!-- Services -->
+<div class="services-bg" id="services">
+  <div class="services-inner">
+    <p class="section-label">Plans</p>
+    <h2 class="section-title">集客お手伝いプラン</h2>
+    <p class="section-desc">月額でデザイナーをあなたのチームに。</p>
+
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:1.5rem;">
+      <div class="plan-card">
+        <p class="plan-price">¥30,000<span>/月</span></p>
+        <p class="plan-name">個人・個人事業主向け</p>
+
+        <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--mist);">
+          <p style="font-family:sans-serif;font-size:0.75rem;color:var(--text-light);">最低3ヶ月〜</p>
+          <p style="font-family:sans-serif;font-size:0.75rem;color:var(--mauve);">6ヶ月契約で割引あり</p>
+        </div>
+      </div>
+      <div class="plan-card">
+        <p class="plan-price">¥50,000<span>/月</span></p>
+        <p class="plan-name">個人・個人事業主向け</p>
+
+        <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--mist);">
+          <p style="font-family:sans-serif;font-size:0.75rem;color:var(--text-light);">最低3ヶ月〜</p>
+          <p style="font-family:sans-serif;font-size:0.75rem;color:var(--mauve);">6ヶ月契約で割引あり</p>
+        </div>
+      </div>
+      <div class="plan-card featured">
+        <div class="plan-badge">人気</div>
+        <p class="plan-price">¥80,000<span>/月</span></p>
+        <p class="plan-name">中小企業向け</p>
+
+        <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--mist);">
+          <p style="font-family:sans-serif;font-size:0.75rem;color:var(--mauve);">6ヶ月 or 1年契約</p>
+        </div>
+      </div>
+      <div class="plan-card">
+        <p class="plan-price">¥100,000<span>/月</span></p>
+        <p class="plan-name">中小企業向け（上位）</p>
+
+        <div style="margin-top:1.25rem;padding-top:1rem;border-top:1px solid var(--mist);">
+          <p style="font-family:sans-serif;font-size:0.75rem;color:var(--mauve);">6ヶ月 or 1年契約</p>
+        </div>
+      </div>
+    </div>
+
+    <p class="plan-note" style="margin-top:1rem;">契約期間中のプラン変更はお受けしておりません。更新時にご相談ください。</p>
+
+    <div style="margin-top:3.5rem;">
+      <p class="section-label">Case</p>
+      <p class="section-desc" style="margin-bottom:1.5rem;">実際の進め方</p>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;">
+
+        <div style="background:var(--white);border:1px solid var(--mist);border-radius:4px;padding:1.5rem;">
+          <p style="font-family:sans-serif;font-size:0.75rem;color:var(--mauve);letter-spacing:0.1em;margin-bottom:0.25rem;">個人・個人事業主向け</p>
+          <p style="font-family:sans-serif;font-size:0.7rem;color:var(--text-light);margin-bottom:1.25rem;">¥30,000/月</p>
+          <div style="display:flex;flex-direction:column;gap:0.75rem;">
+            <div style="display:grid;grid-template-columns:3rem 1fr;gap:0.75rem;align-items:start;">
+              <p style="font-family:sans-serif;font-size:0.7rem;color:var(--text-light);padding-top:2px;">1ヶ月目</p>
+              <div style="border-left:2px solid var(--lavender);padding-left:0.75rem;">
+                <p style="font-family:sans-serif;font-size:0.8rem;color:var(--text-mid);line-height:1.8;">MTG・方向性の整理<br>SNSコンテンツ企画・デモ動画制作</p>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:3rem 1fr;gap:0.75rem;align-items:start;">
+              <p style="font-family:sans-serif;font-size:0.7rem;color:var(--text-light);padding-top:2px;">2ヶ月目</p>
+              <div style="border-left:2px solid var(--lavender);padding-left:0.75rem;">
+                <p style="font-family:sans-serif;font-size:0.8rem;color:var(--text-mid);line-height:1.8;">SNS用動画 台本づくり・2本制作・投稿</p>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:3rem 1fr;gap:0.75rem;align-items:start;">
+              <p style="font-family:sans-serif;font-size:0.7rem;color:var(--text-light);padding-top:2px;">3ヶ月目</p>
+              <div style="border-left:2px solid var(--lavender);padding-left:0.75rem;">
+                <p style="font-family:sans-serif;font-size:0.8rem;color:var(--text-mid);line-height:1.8;">SNS用動画 台本づくり・2本制作・投稿<br>振り返り・改善提案</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:var(--white);border:1px solid var(--lavender);border-radius:4px;padding:1.5rem;">
+          <p style="font-family:sans-serif;font-size:0.75rem;color:var(--mauve);letter-spacing:0.1em;margin-bottom:0.25rem;">中小企業向け</p>
+          <p style="font-family:sans-serif;font-size:0.7rem;color:var(--text-light);margin-bottom:1.25rem;">¥80,000/月〜</p>
+          <div style="display:flex;flex-direction:column;gap:0.75rem;">
+            <div style="display:grid;grid-template-columns:3rem 1fr;gap:0.75rem;align-items:start;">
+              <p style="font-family:sans-serif;font-size:0.7rem;color:var(--text-light);padding-top:2px;">1ヶ月目</p>
+              <div style="border-left:2px solid var(--lavender-deep);padding-left:0.75rem;">
+                <p style="font-family:sans-serif;font-size:0.8rem;color:var(--text-mid);line-height:1.8;">集客ターゲット設定<br>SNSコンテンツ企画・デモ動画制作</p>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:3rem 1fr;gap:0.75rem;align-items:start;">
+              <p style="font-family:sans-serif;font-size:0.7rem;color:var(--text-light);padding-top:2px;">2ヶ月目</p>
+              <div style="border-left:2px solid var(--lavender-deep);padding-left:0.75rem;">
+                <p style="font-family:sans-serif;font-size:0.8rem;color:var(--text-mid);line-height:1.8;">SNS動画 2本制作・投稿<br>Web広告 設定・入稿</p>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:3rem 1fr;gap:0.75rem;align-items:start;">
+              <p style="font-family:sans-serif;font-size:0.7rem;color:var(--text-light);padding-top:2px;">3ヶ月目</p>
+              <div style="border-left:2px solid var(--lavender-deep);padding-left:0.75rem;">
+                <p style="font-family:sans-serif;font-size:0.8rem;color:var(--text-mid);line-height:1.8;">SNS動画 2本制作・投稿<br>Web広告 運用・最適化</p>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:3rem 1fr;gap:0.75rem;align-items:start;">
+              <p style="font-family:sans-serif;font-size:0.7rem;color:var(--text-light);padding-top:2px;">4ヶ月目</p>
+              <div style="border-left:2px solid var(--lavender-deep);padding-left:0.75rem;">
+                <p style="font-family:sans-serif;font-size:0.8rem;color:var(--text-mid);line-height:1.8;">SNS動画 2本制作・投稿<br>パンフレット制作・広告分析レポート共有</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div style="margin-top: 3.5rem;">
+      <p class="section-label">What I do</p>
+      <p class="section-desc" style="margin-bottom: 1.5rem;">こんなこと、全部できます。</p>
+      <div class="menu-grid">
+        <div class="menu-item"><div class="mi-icon">📱</div><p>SNS運用</p></div>
+        <div class="menu-item"><div class="mi-icon">🖼</div><p>バナー・広告</p></div>
+        <div class="menu-item"><div class="mi-icon">🌐</div><p>Webサイト</p></div>
+        <div class="menu-item"><div class="mi-icon">📄</div><p>パンフ・チラシ</p></div>
+        <div class="menu-item"><div class="mi-icon">🎬</div><p>動画編集</p></div>
+        <div class="menu-item"><div class="mi-icon">✏️</div><p>ブランド整理</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Availability -->
+<div style="background:var(--mist);padding:6rem 0;">
+<div style="max-width:960px;margin:0 auto;padding:0 2.5rem;">
+  <p class="section-label">Availability</p>
+  <h2 class="section-title">空き状況</h2>
+  <p class="section-desc">現在受け付け可能なプランの枠数です。</p>
+  <div id="availability-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;">
+    <div style="background:var(--white);border:1px solid var(--mist);border-radius:4px;padding:1.5rem;text-align:center;">
+      <p style="font-family:sans-serif;font-size:0.75rem;color:var(--mauve);letter-spacing:0.1em;margin-bottom:0.5rem;">読み込み中...</p>
+    </div>
+  </div>
+  <p id="availability-note" style="font-family:sans-serif;font-size:0.75rem;color:var(--text-light);margin-top:1rem;text-align:center;"></p>
+</div>
+</div>
+
+<script>
+const TOTAL_HOURS = 120;
+const PLANS = [
+  { name: '3万円プラン', price: '¥30,000', hours: 8 },
+  { name: '5万円プラン', price: '¥50,000', hours: 18 },
+  { name: '8万円プラン', price: '¥80,000', hours: 22 },
+  { name: '10万円プラン', price: '¥100,000', hours: 35 },
+];
+
+async function fetchUsedHours() {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = now.getMonth();
+  const start = new Date(y, m, 1);
+  const end = new Date(y, m + 1, 0, 23, 59, 59);
+
+  const PROXY = 'https://api.allorigins.win/raw?url=';
+  const ICAL_URL = encodeURIComponent('https://calendar.google.com/calendar/ical/ayuka030%40gmail.com/public/basic.ics');
+  const res = await fetch(PROXY + ICAL_URL);
+  const text = await res.text();
+
+  const events = text.split('BEGIN:VEVENT').slice(1);
+  let total = 0;
+  events.forEach(ev => {
+    const dtStartMatch = ev.match(/DTSTART(?:;[^:]*)?:([\dT Z]+)/);
+    const dtEndMatch = ev.match(/DTEND(?:;[^:]*)?:([\dT Z]+)/);
+    if (!dtStartMatch || !dtEndMatch) return;
+    const parseDate = s => {
+      s = s.trim();
+      if (s.length === 8) return new Date(s.slice(0,4), s.slice(4,6)-1, s.slice(6,8));
+      return new Date(s.replace(/(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z?/, '$1-$2-$3T$4:$5:$6'));
+    };
+    const evStart = parseDate(dtStartMatch[1]);
+    const evEnd = parseDate(dtEndMatch[1]);
+    if (evStart >= start && evStart <= end) {
+      total += (evEnd - evStart) / 3600000;
+    }
+  });
+  return Math.round(total);
+}
+
+async function renderAvailability() {
+  const grid = document.getElementById('availability-grid');
+  const note = document.getElementById('availability-note');
+  try {
+    const used = await fetchUsedHours();
+    const remaining = TOTAL_HOURS - used;
+    const now = new Date();
+    const monthName = `${now.getMonth() + 1}月`;
+
+    grid.innerHTML = PLANS.map(p => {
+      const slots = Math.floor(remaining / p.hours);
+      const color = slots === 0 ? 'var(--text-light)' : slots === 1 ? '#9C8EAA' : 'var(--lavender-deep)';
+      const label = slots === 0 ? '満枠' : `あと ${slots} 枠`;
+      return `
+        <div style="background:var(--white);border:1px solid var(--mist);border-radius:4px;padding:1.5rem;text-align:center;">
+          <p style="font-family:sans-serif;font-size:0.75rem;color:var(--mauve);letter-spacing:0.1em;margin-bottom:0.5rem;">${p.price}/月</p>
+          <p style="font-family:sans-serif;font-size:0.85rem;color:var(--text-dark);margin-bottom:0.75rem;">${p.name}</p>
+          <p style="font-family:sans-serif;font-size:1.4rem;font-weight:600;color:${color};">${label}</p>
+        </div>`;
+    }).join('');
+    note.textContent = `${monthName}現在 · 稼働済み ${used}時間 / 残り ${remaining}時間`;
+  } catch(e) {
+    grid.innerHTML = `<div style="font-family:sans-serif;font-size:0.85rem;color:var(--text-light);padding:1rem;">空き状況を取得できませんでした。</div>`;
+  }
+}
+
+renderAvailability();
+</script>
+
+<!-- Works -->
+<section id="works">
+  <p class="section-label">Works</p>
+  <h2 class="section-title">実績</h2>
+  <p class="section-desc">実際に動かしてきたもの。数字より、空気感を。</p>
+  <div class="works-grid">
+    <div class="work-card">
+      <div class="work-thumb t1">🎓</div>
+      <div class="work-info">
+        <p class="work-tag">SNS / Web / 動画</p>
+        <h3>Tsukugaku</h3>
+        <p>学習塾のSNS運用・Web制作・動画編集を担当。コンテンツ設計から制作まで一貫してサポート。</p>
+      </div>
+    </div>
+    <div class="work-card">
+      <div class="work-thumb t2">🌙</div>
+      <div class="work-info">
+        <p class="work-tag">デザイン / フライヤー</p>
+        <h3>Yojuku</h3>
+        <p>フライヤー・告知物のデザイン制作。ブランドトーンに合わせたビジュアル展開。</p>
+      </div>
+    </div>
+    <div class="work-card">
+      <div class="work-thumb t3">🌿</div>
+      <div class="work-info">
+        <p class="work-tag">ブランド / アセット</p>
+        <h3>まどろみ / Soft Moments</h3>
+        <p>自身のクリエイティブブランド。やわらかく、夢見心地な世界観でデザインアセットを展開中。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- About -->
+<div class="about-bg" id="about">
+  <div class="about-inner">
+    <div class="about-avatar">🌸</div>
+    <div class="about-text">
+      <p class="section-label">About</p>
+      <h2>あゆ</h2>
+      <p>フリーランスのデザイナー・マーケター。奈良エリアを拠点に、クライアントのビジネスが「ちゃんと伝わる」ための表現を作り続けています。</p>
+      <p>得意なのは、ふわっとしたイメージを形にすること。デザインはもちろん、戦略的な視点と人の気持ちを読む力で、見た目だけじゃない仕事をします。</p>
+      <div class="about-tags">
+        <span class="tag">Graphic Design</span>
+        <span class="tag">SNS運用</span>
+        <span class="tag">Web制作</span>
+        <span class="tag">動画編集</span>
+        <span class="tag">広告クリエイティブ</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Contact -->
+<section id="contact">
+  <div class="contact-inner">
+    <p class="section-label">Contact</p>
+    <h2 class="section-title">まず、話してみませんか。</h2>
+    <p class="section-desc">「何をお願いできるか分からない」でも大丈夫。あなたのビジネスのことを聞かせてください。</p>
+    <a href="mailto:hello@example.com" class="contact-btn">お問い合わせ</a>
+  </div>
+</section>
+
+<footer>
+  © 2025 Ayu — Freelance Designer & Marketer
+</footer>
+
+</body>
+</html>
