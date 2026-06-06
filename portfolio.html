@@ -569,6 +569,7 @@ async function renderAvailability() {
     });
 
     const hoursPerMonth = await Promise.all(months.map(m => fetchUsedHoursForMonth(m.year, m.month)));
+   　console.log('月別使用時間:', hoursPerMonth);
 
     const FIXED = 40;
     const rows = PLANS.map(p => {
